@@ -19,10 +19,6 @@ module top;
 		reset = 1;
 		#15 reset = 0;
 	end
-  
-  /*initial begin
-    $dumpfile("dump.vcd"); $dumpvars(5);
-  end*/
 	
 	// interface instance in order to connect DUT and test bench
 	inf i_inf(clk, reset);
