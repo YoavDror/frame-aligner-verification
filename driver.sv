@@ -32,7 +32,7 @@ class driver;
 	forever begin
 	transaction trans;
 	gen2drv.get(trans);
-    @(posedge vinf.clk);
+    @(negedge vinf.clk);
     vinf.rx_data <= trans.rx_data;
 	//trans.display("[ --Driver-- ]");
 	num_transactions++;

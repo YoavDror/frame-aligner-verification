@@ -13,7 +13,7 @@ class monitor_out;
   task main;
     forever begin
       transaction trans_out = new();
-      @(posedge vinf.clk); // Wait for ALU output (after posedge)
+      @(negedge vinf.clk); // Wait for ALU output (after posedge)
 	  trans_out.fr_byte_position <= vinf.fr_byte_position;
       trans_out.frame_detect <= vinf.frame_detect;
       //trans_out.display("[ --Monitor_out-- ]");

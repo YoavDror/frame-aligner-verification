@@ -13,7 +13,7 @@ class monitor_in;
   task main;
     forever begin
       transaction trans_in = new();
-      @(posedge vinf.clk); // Sample at posedge
+      @(negedge vinf.clk); // Sample at posedge
       trans_in.rx_data <= vinf.rx_data;
   //    trans_in.display("[ --Monitor_in-- ]");
   
