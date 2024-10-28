@@ -13,11 +13,10 @@ class monitor_in;
   task main;
     forever begin
       transaction trans_in = new();
-      @(negedge vinf.clk); // Sample at posedge
-      trans_in.rx_data <= vinf.rx_data;
-  //    trans_in.display("[ --Monitor_in-- ]");
-  
-  /*Write a condition to pass only valid headers.. and find a way to count in the corebord 10 bytes insted of passing them one by one*/
+      @(negedge vinf.clk)begin // Sample at negedge
+      trans_in.rx_data = vinf.rx_data;
+     // trans_in.display("[ --Monitor_in-- ]");
+      end
       mon2scbin.put(trans_in); // Send to scoreboard
     end
   endtask
