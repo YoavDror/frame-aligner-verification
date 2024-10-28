@@ -5,7 +5,7 @@ class reference_model;
   int frame_counter = 0;
   bit [7:0] previous_byte;
   bit update_fr_byte_position_clock_after = 0;
-  bit update_frame_detect_clocl_after = 0;
+  bit update_frame_detect_clock_after = 0;
 
   // FSM Outputs
   bit frame_detect = 0;
@@ -26,9 +26,9 @@ class reference_model;
    // $display("[--State--]: %0d", state);
     case (state)
       IDLE: begin
-        if (update_frame_detect_clocl_after == 1) begin
+        if (update_frame_detect_clock_after == 1) begin
           frame_detect = 0;
-          update_frame_detect_clocl_after = 0;
+          update_frame_detect_clock_after = 0;
         end
         frame_counter = 0;
         na_byte_counter++;
@@ -46,7 +46,7 @@ class reference_model;
           update_fr_byte_position_clock_after = 0 ;
           if (na_byte_counter == 47) begin
             na_byte_counter = 0;
-            update_frame_detect_clocl_after = 1;
+            update_frame_detect_clock_after = 1;
           end
         end
       end
