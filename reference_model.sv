@@ -4,6 +4,8 @@ class reference_model;
   int na_byte_counter = 0;
   int frame_counter = 0;
   bit [7:0] previous_byte;
+  bit update_fr_byte_position_clock_after = 0;
+  bit update_frame_detect_clocl_after = 0;
 
   // FSM Outputs
   bit frame_detect = 0;
@@ -21,18 +23,31 @@ class reference_model;
 
   // Process Frame Function (FSM logic)
   task process_frame(input bit [7:0] rx_data);
-    $display("[--State--]: %0d", state);
+   // $display("[--State--]: %0d", state);
     case (state)
       IDLE: begin
+        if (update_frame_detect_clocl_after == 1) begin
+          frame_detect = 0;
+          update_frame_detect_clocl_after = 0;
+        end
         frame_counter = 0;
         na_byte_counter++;
+        if (update_fr_byte_position_clock_after == 0) begin
         fr_byte_position = 0;  // Reset byte position in IDLE
+        end
+        else begin
+          fr_byte_position = 1;
+        end
+        
         if (rx_data == 8'hAA || rx_data == 8'h55) begin
           state = H_LSB;
           previous_byte = rx_data;
-        end else if (na_byte_counter == 47) begin
-          frame_detect = 0;
-          na_byte_counter = 0;
+        end else begin
+          update_fr_byte_position_clock_after = 0 ;
+          if (na_byte_counter == 47) begin
+            na_byte_counter = 0;
+            update_frame_detect_clocl_after = 1;
+          end
         end
       end
 
@@ -43,7 +58,13 @@ class reference_model;
           state = H_MSB;
           na_byte_counter = 0;
         end else begin
+          if (rx_data == 8'hAA && previous_byte == 8'h55) begin
+            state = H_LSB;
+          end
+          else begin
+          update_fr_byte_position_clock_after = 1 ;
           state = IDLE;
+          end
         end
       end
 
@@ -51,22 +72,23 @@ class reference_model;
         fr_byte_position = 1;
         na_byte_counter = 0;
         frame_counter++;
-        if (frame_counter == 3) begin
-          frame_detect = 1;
-        end
         state = PAYLOAD;
       end
 
       PAYLOAD: begin
+        if (frame_counter == 3) begin
+          frame_detect = 1;
+        end
         fr_byte_position++;
         if (fr_byte_position < 11) begin
-          // Stay in PAYLOAD state until payload bytes complete
+          state = PAYLOAD;
         end else begin
-          // Transition after payload is complete
+          // Resetting or transitioning after payload is complete
           if (rx_data == 8'hAA || rx_data == 8'h55) begin
             state = H_LSB;
             previous_byte = rx_data;
           end else begin
+            update_fr_byte_position_clock_after = 0 ;
             state = IDLE;
           end
         end

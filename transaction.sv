@@ -5,7 +5,7 @@ class transaction;
   		 bit [3:0] fr_byte_position;
  		 bit frame_detect;
 		 
-	constraint rx_data_c {rx_data dist {8'hAF:=50, 8'hAA:=50};}
+	// constraint rx_data_c {rx_data dist {8'hAF:=50, 8'hAA:=50};}
 	
 	function void display(string name);
 	$display ("---------------------------");
