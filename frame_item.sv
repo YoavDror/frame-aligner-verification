@@ -11,7 +11,7 @@ class frame_item;
 
   // Constraint to give the payload a non-zero length and random values
   constraint payload_c {
-    payload.size() == 10; // Set payload size between 1 and 10 bytes
+    payload.size() == 10; // Set payload size to 10 bytes
     foreach (payload[i]) payload[i] inside {[8'h00:8'hFF]}; // Allow random values for each byte
   }
 
