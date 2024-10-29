@@ -25,26 +25,77 @@ class monitor_out;
   // Byte Position Tracking Coverage
   covergroup byte_position_tracking_cg @(negedge vinf.clk);
     coverpoint vinf.fr_byte_position[3:0] {
-      bins valid_byte_tracking = {4'h1 => 4'h2 => 4'h3 => 4'h4 => 4'h5 => 4'h6 => 4'h7 => 4'h8 => 4'h9 => 4'ha => 4'hb}; // Track positions 0 through 11
+      bins valid_byte_tracking = {[0:11]}; // Track positions 0 through 11
     }
   endgroup
 
-  // Legal Frame Detection Coverage
-covergroup Legal_frame_detection_cg @(negedge vinf.clk);
-  coverpoint vinf.rx_data {
-    // Sequences with three consecutive valid frames using different combinations of headers and payloads
-    bins valid_frame_1[] = {8'hAF => 8'hAA => 10*[8'h00:8'hFF] => 8'hAF => 8'hAA => 10*[8'h00:8'hFF] => 8'hAF => 8'hAA => 10*[8'h00:8'hFF]};
-    bins valid_frame_2[] = {8'hBA => 8'h55 => 10*[8'h00:8'hFF] => 8'hBA => 8'h55 => 10*[8'h00:8'hFF] => 8'hBA => 8'h55 => 10*[8'h00:8'hFF]};
-    bins valid_frame_3[] = {8'hAF => 8'hAA => 10*[8'h00:8'hFF] => 8'hBA => 8'h55 => 10*[8'h00:8'hFF] => 8'hAF => 8'hAA => 10*[8'h00:8'hFF]};
-    bins valid_frame_4[] = {8'hBA => 8'h55 => 10*[8'h00:8'hFF] => 8'hAF => 8'hAA => 10*[8'h00:8'hFF] => 8'hBA => 8'h55 => 10*[8'h00:8'hFF]};
-    bins valid_frame_5[] = {8'hAF => 8'hAA => 10*[8'h00:8'hFF] => 8'hBA => 8'h55 => 10*[8'h00:8'hFF] => 8'hBA => 8'h55 => 10*[8'h00:8'hFF]};
-    bins valid_frame_6[] = {8'hBA => 8'h55 => 10*[8'h00:8'hFF] => 8'hAF => 8'hAA => 10*[8'h00:8'hFF] => 8'hAF => 8'hAA => 10*[8'h00:8'hFF]};
-    bins valid_frame_7[] = {8'hAF => 8'hAA => 10*[8'h00:8'hFF] => 8'hAF => 8'hAA => 10*[8'h00:8'hFF] => 8'hBA => 8'h55 => 10*[8'h00:8'hFF]};
-    bins valid_frame_8[] = {8'hBA => 8'h55 => 10*[8'h00:8'hFF] => 8'hBA => 8'h55 => 10*[8'h00:8'hFF] => 8'hAF => 8'hAA => 10*[8'h00:8'hFF]};
-  }
-endgroup
+  // Instantiate the covergroup
+  byte_position_tracking_cg byte_position_tracking_cg_inst = new();
 
-  byte_position_tracking_cg byte_position_tracking_cg_inst = new;
-  Legal_frame_detection_cg Legal_frame_detection_cg_inst = new;
+  // Sequence-based coverage for Legal Frame Detection
+
+  property valid_frame_1;
+    @(posedge vinf.clk)
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF});
+  endproperty
+  cover property (valid_frame_1);
+
+  property valid_frame_2;
+    @(posedge vinf.clk)
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF});
+  endproperty
+  cover property (valid_frame_2);
+
+  property valid_frame_3;
+    @(posedge vinf.clk)
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF});
+  endproperty
+  cover property (valid_frame_3);
+
+  property valid_frame_4;
+    @(posedge vinf.clk)
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF});
+  endproperty
+  cover property (valid_frame_4);
+
+  property valid_frame_5;
+    @(posedge vinf.clk)
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF});
+  endproperty
+  cover property (valid_frame_5);
+
+  property valid_frame_6;
+    @(posedge vinf.clk)
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF});
+  endproperty
+  cover property (valid_frame_6);
+
+  property valid_frame_7;
+    @(posedge vinf.clk)
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF});
+  endproperty
+  cover property (valid_frame_7);
+
+  property valid_frame_8;
+    @(posedge vinf.clk)
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hBA) ##1 (vinf.rx_data == 8'h55) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF}) ##
+      (vinf.rx_data == 8'hAF) ##1 (vinf.rx_data == 8'hAA) ##1 [*10](vinf.rx_data inside {8'h00:8'hFF});
+  endproperty
+  cover property (valid_frame_8);
 
 endclass
