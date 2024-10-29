@@ -11,12 +11,12 @@ class frame_item;
 
   // Constraint to give the payload a non-zero length and random values
   constraint payload_c {
-    payload.size() == 10; // Set payload size to 10 bytes
+    payload.size() inside {[9:10]}; // Set payload size in range 9 - 10 bytes
     foreach (payload[i]) payload[i] inside {[8'h00:8'hFF]}; // Allow random values for each byte
   }
 
   constraint header_distribution {
-    header dist {HEAD_1 := 40, HEAD_2 := 40, ILLEGAL := 20};
+    header dist {HEAD_1 := 35, HEAD_2 := 35, ILLEGAL := 30};
   }
 
   function void post_randomize();
