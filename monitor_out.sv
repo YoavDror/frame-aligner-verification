@@ -30,7 +30,7 @@ class monitor_out;
   endgroup
 
   // Instantiate the covergroup
-  byte_position_tracking_cg byte_position_tracking_cg_inst = new();
+ // byte_position_tracking_cg byte_position_tracking_cg_inst = new();
 
   // Sequence-based coverage for Legal Frame Detection
 
