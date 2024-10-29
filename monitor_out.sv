@@ -16,6 +16,7 @@ class monitor_out;
       @(negedge vinf.clk) begin // Wait for ALU output (after negedge)
 	  trans_out.fr_byte_position = vinf.fr_byte_position;
       trans_out.frame_detect = vinf.frame_detect;
+    //  trans_out.rx_data = vinf.rx_data;
       //trans_out.display("[ --Monitor_out-- ]");
       end
       mon2scbout.put(trans_out); // Send to scoreboard
