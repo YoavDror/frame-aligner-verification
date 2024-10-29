@@ -16,7 +16,7 @@ class frame_item;
   }
 
   constraint header_distribution {
-    header dist {HEAD_1 := 25, HEAD_2 := 25, ILLEGAL := 50};
+    header dist {HEAD_1 := 20, HEAD_2 := 20, ILLEGAL := 60};
   }
 
   function void post_randomize();
