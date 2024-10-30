@@ -1,7 +1,7 @@
 class monitor_out;
   
-  virtual inf vinf; //create virtual interface handle
-  mailbox mon2scbout; //create mailbox handle
+  virtual inf vinf; // create virtual interface handle
+  mailbox mon2scbout; // create mailbox handle
   
   // Constructor
   function new(virtual inf vinf, mailbox mon2scbout);
