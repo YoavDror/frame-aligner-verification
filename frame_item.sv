@@ -9,15 +9,6 @@ class frame_item;
     this.payload = new[0]; // Initialize dynamic array
   endfunction
 
-  // Constraint to give the payload a non-zero length and random values
-  constraint payload_c {
-    payload.size() == 10; // Set payload size to 10 bytes
-    foreach (payload[i]) payload[i] inside {[8'h00:8'hFF]}; // Allow random values for each byte
-  }
-
-  constraint header_distribution {
-    header dist {HEAD_1 := 20, HEAD_2 := 20, ILLEGAL := 60};
-  }
 
   function void post_randomize();
     case (header)
@@ -26,4 +17,26 @@ class frame_item;
       ILLEGAL: header_value = $urandom_range(16'h0000, 16'hFFFF);
     endcase
   endfunction
+
+  // Constraint to give the payload a non-zero length and random values
+  constraint payload_c {
+    if (header == ILLEGAL){
+       payload.size() inside {[0:46]}; // Set payload size in range 0 - 46 bytes
+       foreach (payload[i]) payload[i] inside {[8'h00:8'hFF]}; // Allow random values for each byte
+    }
+    else {
+  payload.size() == 10;
+  foreach (payload[i]) payload[i] inside {
+    [8'h00:8'hFF]    // Allow random values for each byte
+  //  8'hAF, 8'hAA,     // Parts of HEAD_1 (16'hAFAA)
+   // 8'hBA, 8'h55      // Parts of HEAD_2 (16'hBA55)
+  }; 
+} 
+  }
+
+  constraint header_distribution {
+    header dist {HEAD_1 := 40, HEAD_2 := 40, ILLEGAL := 20};
+  }
+
+
 endclass

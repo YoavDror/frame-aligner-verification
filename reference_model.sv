@@ -45,7 +45,7 @@ class reference_model;
         end else begin
           update_fr_byte_position_clock_after = 0 ;
           if (na_byte_counter == 47) begin
-			na_byte_counter_assert: assert (na_byte_counter == 47)
+			//na_byte_counter_assert: assert (na_byte_counter == 47)
             na_byte_counter = 0;
             update_frame_detect_clock_after = 1;
           end
@@ -79,7 +79,7 @@ class reference_model;
       PAYLOAD: begin
         if (frame_counter == 3) begin
           frame_detect = 1;
-		 frame_counter_assert: assert (frame_counter == 3);
+		 //frame_counter_assert: assert (frame_counter == 3);
         end
         fr_byte_position++;
         if (fr_byte_position < 11) begin

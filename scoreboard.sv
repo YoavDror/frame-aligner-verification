@@ -36,10 +36,11 @@ class scoreboard;
       // Compare the actual vs expected outputs
       if ((trans_out.frame_detect == ref_model.frame_detect) && 
           (trans_out.fr_byte_position == ref_model.fr_byte_position)) begin
-        $display("[--Scoreboard--] Result as Expected");
-        $display("Frame Detect: %0b, Byte Position: %0d", trans_out.frame_detect, trans_out.fr_byte_position);
+        //$display("[--Scoreboard--] Result as Expected");
+       // $display("Frame Detect: %0b, Byte Position: %0d", trans_out.frame_detect, trans_out.fr_byte_position);
       end else begin
         $display("[--Scoreboard--] Mismatch detected!");
+        $display("Current time is: %0t", $time);
         $display("Expected Frame Detect: %0b, Actual Frame Detect: %0b", ref_model.frame_detect, trans_out.frame_detect);
         $display("Expected Byte Position: %0d, Actual Byte Position: %0d", ref_model.fr_byte_position, trans_out.fr_byte_position);
         error_counter++;
