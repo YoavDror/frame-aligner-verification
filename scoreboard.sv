@@ -48,7 +48,7 @@ class scoreboard;
 
       num_transactions++;
       
-      if (num_transactions == 1000) begin
+      if (num_transactions == 2000) begin
         $display("[--Scoreboard--] Total Errors: %0d/%0d", error_counter,num_transactions);
       end
     end

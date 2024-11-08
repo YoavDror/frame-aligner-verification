@@ -31,13 +31,13 @@ class generator;
 			// Randomize frame_item
 			if (!frame.randomize()) $fatal("Gen: frame randomization failed");
 
-			// Display header and payload information
+			/*// Display header and payload information
           $display("Generated frame:");
 			$display("Header (LSB first): %h %h", frame.header_value[7:0], frame.header_value[15:8]);
 			$display("Payload:");
 			foreach (frame.payload[i]) begin
 				$display("  Byte %0d: %h", i, frame.payload[i]);
-			end
+			end */
 
 			// Send each byte of header_value in LSB-first order
 			trans = new();
