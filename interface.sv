@@ -8,9 +8,6 @@ interface inf (input logic clk, reset);
   // Modport declarations for DUT (Device Under Test)
   modport DUT (input clk, reset, rx_data, output fr_byte_position, frame_detect);
 
-  // Byte Position Tracking Coverage Declaration
-  //byte_position_tracking_cg byte_position_tracking_cg_inst = new();
-
   // Covergroup for byte position tracking
   covergroup byte_position_tracking_cg;
     coverpoint fr_byte_position[3:0] {
@@ -31,7 +28,6 @@ interface inf (input logic clk, reset);
   end
   
   
-  
   // Sequence declarations for detecting headers
   sequence header_1;
     (rx_data == 8'hAA) ##1 (rx_data == 8'hAF);
@@ -40,13 +36,6 @@ interface inf (input logic clk, reset);
   sequence header_2;
     (rx_data == 8'h55) ##1 (rx_data == 8'hBA);
   endsequence
-
-/*
-I // want to make Ilegal sequence
-  sequence illegal;
-  (rx_data != header_1) && (rx_data != header_2) ;
-  endsequence
-*/
 
 // Properties for detecting valid frames
 property valid_frame1;
@@ -136,21 +125,6 @@ property alignment_resilience3;
 endproperty
 
 
-
-/*
-property aligment_resillience2;
-  @(posedge clk)
-  disable iff(reset)
-  (frame_detect == 1) ##1 illegal ##11 illegal ##11 (header_1 or header_2) ##11 illegal ##11 illegal |=> (frame_detect == 1);
-endproperty 
-
-property aligment_resillience3;
-  @(posedge clk)
-  disable iff(reset)
-  (frame_detect == 1) ##1 illegal ##11 illegal ##11 illegal ##11 (header_1 or header_2) ##11 illegal |=> (frame_detect == 1);
-endproperty 
-*/
-
   // Assertion and Coverage for the valid_frame1 property
 assert property (valid_frame1)
   else $error("Error: frame_detect did not rise after three valid headers valid_frame1 (header_1, header_1, header_1) in a row at time: %0t", $time);
@@ -199,23 +173,6 @@ misalignment_resilience2_inst: cover property(misalignment_resilience2);
 alignment_resilience1_inst: cover property(alignment_resilience1);
 alignment_resilience2_inst: cover property(alignment_resilience2);
 alignment_resilience3_inst: cover property(alignment_resilience3);
-
-/*
-// Assertion and Coverage for the aligment_resillience1 property
-assert property (valigment_resillience1)
-  else $error("Error: frame_detect became 0 after four non consecutive frames ( illegal, LEGAL, illegal, illegal, illegal) at time: %0t", $time);
-aligment_resillience_1_inst: cover property (valigment_resillience1);
-
-// Assertion and Coverage for the aligment_resillience1 property
-assert property (valigment_resillience2)
-  else $error("Error: frame_detect became 0 after four non consecutive frames ( illegal, illegal, LEGAL, illegal, illegal) at time: %0t", $time);
-aligment_resillience_2_inst: cover property (valigment_resillience2);
-
-// Assertion and Coverage for the aligment_resillience1 property
-assert property (valigment_resillience3)
-  else $error("Error: frame_detect became 0 after four non consecutive frames ( illegal, illegal, illegal, LEGAL, illegal) at time: %0t", $time);
-aligment_resillience_3_inst: cover property (valigment_resillience3);
-*/
 
 
 
