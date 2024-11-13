@@ -1,7 +1,7 @@
 interface inf (input logic clk, reset);
 
   // Signal declarations
-  logic [3:0] 00; // Byte position in a legal frame
+  logic [3:0] fr_byte_position; // Byte position in a legal frame
   logic frame_detect;           // Frame alignment indication
   logic [7:0] rx_data;
 
