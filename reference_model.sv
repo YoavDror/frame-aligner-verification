@@ -58,7 +58,7 @@ class reference_model;
           state = H_MSB;
           na_byte_counter = 0;
         end else begin
-          if (rx_data == 8'hAA && previous_byte == 8'h55) begin
+          if (rx_data == 8'hAA || previous_byte == 8'h55) begin
             state = H_LSB;
           end
           else begin
